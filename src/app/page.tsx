@@ -1,4 +1,4 @@
-import { HydrateClient, prefetch, trpc } from "@/trpc/server";
+import { HydrateClient, prefetchInfinite, trpc } from "@/trpc/server";
 import { Suspense } from "react";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { connection } from "next/server";
@@ -7,10 +7,16 @@ import { TaskListSkeleton } from "@/components/tasks/task-list-skeleton";
 import { TaskFormDialog } from "@/components/tasks/task-form-dialog";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import { TASK_PAGE_SIZE } from "@/lib/task";
 
 async function TaskListSection() {
   await connection()
-  prefetch(trpc.task.list.queryOptions())
+  prefetchInfinite(
+    trpc.task.list.infiniteQueryOptions(
+      { limit: TASK_PAGE_SIZE },
+      { getNextPageParam: (lastPage) => lastPage.nextCursor }
+    )
+  )
 
   return (
     <HydrateClient>

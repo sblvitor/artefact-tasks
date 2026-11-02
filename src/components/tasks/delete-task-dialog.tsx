@@ -21,7 +21,7 @@ export function DeleteTaskDialog({ task }: DeleteTaskDialogProps) {
     onSuccess: () => {
       // Close first so the dialog animates out before the card leaves the list.
       setOpen(false)
-      queryClient.invalidateQueries({ queryKey: trpc.task.list.queryKey() })
+      queryClient.invalidateQueries(trpc.task.list.pathFilter())
       toast.add({
         type: 'success',
         description: 'Task deleted!'

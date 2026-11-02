@@ -25,7 +25,7 @@ export function TaskFormDialog({
   const queryClient = useQueryClient()
 
   function handleSuccess(message: string) {
-    queryClient.invalidateQueries({ queryKey: trpc.task.list.queryKey() })
+    queryClient.invalidateQueries(trpc.task.list.pathFilter())
     toast.add({
       type: 'success',
       description: message
