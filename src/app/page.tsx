@@ -3,6 +3,9 @@ import { Suspense } from "react";
 import { ErrorBoundary } from "../components/error-boundary";
 import { connection } from "next/server";
 import { TaskList } from "@/components/tasks/task-list";
+import { TaskFormDialog } from "@/components/tasks/task-form-dialog";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 async function TaskListSection() {
   await connection()
@@ -20,6 +23,14 @@ export default function Home() {
     <main className="container flex flex-col flex-1 mx-auto p-8">
       <header className="flex items-center justify-between gap-4">
         <h1 className="text-4xl font-semibold">Tasks</h1>
+        <TaskFormDialog
+          trigger={
+            <Button>
+              <Plus />
+              New task
+            </Button>
+          }
+        />
       </header>
       <ErrorBoundary>
         <Suspense fallback={<div>Loading...</div>}>
