@@ -4,6 +4,7 @@ import { Button } from "../ui/button"
 import { Card, CardAction, CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card"
 import { LocalDate } from "../local-date"
 import { TaskFormDialog } from "./task-form-dialog"
+import { DeleteTaskDialog } from "./delete-task-dialog"
 
 type TaskCardProps = {
   task: Task
@@ -14,7 +15,7 @@ export function TaskCard({ task }: TaskCardProps) {
     <Card className="h-full">
       <CardHeader>
         <CardTitle className="text-base wrap-break-word">{task.title}</CardTitle>
-        <CardAction>
+        <CardAction className="flex gap-1">
           <TaskFormDialog
             task={task}
             trigger={
@@ -23,6 +24,7 @@ export function TaskCard({ task }: TaskCardProps) {
               </Button>
             }
           />
+          <DeleteTaskDialog task={task} />
         </CardAction>
       </CardHeader>
       <CardContent className="flex-1">
