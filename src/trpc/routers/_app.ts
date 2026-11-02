@@ -1,5 +1,6 @@
 import z from "zod";
 import { baseProcedure, createTRPCRouter } from "../init";
+import { taskRouter } from "./task";
 
 export const appRouter = createTRPCRouter({
   hello: baseProcedure
@@ -12,7 +13,8 @@ export const appRouter = createTRPCRouter({
       return {
         greeting: `hello ${opts.input.text}`
       }
-    })
+    }),
+  task: taskRouter,
 })
 
 export type AppRouter = typeof appRouter
