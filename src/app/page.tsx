@@ -1,26 +1,31 @@
 import { HydrateClient, prefetch, trpc } from "@/trpc/server";
-import { ClientGreeting } from "./client-greeting";
 import { Suspense } from "react";
-import { ErrorBoundary } from "./error-boundary";
+import { ErrorBoundary } from "../components/error-boundary";
 import { connection } from "next/server";
+import { TaskList } from "@/components/tasks/task-list";
 
-async function Greeting() {
+async function TaskListSection() {
   await connection()
-  prefetch(trpc.hello.queryOptions({ text: 'world' }))
+  prefetch(trpc.task.list.queryOptions())
 
   return (
     <HydrateClient>
-      <ClientGreeting />
+      <TaskList />
     </HydrateClient>
   )
 }
 
 export default function Home() {
   return (
-    <ErrorBoundary>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Greeting />
-      </Suspense>
-    </ErrorBoundary>
+    <main className="container flex flex-col flex-1 mx-auto p-8">
+      <header className="flex items-center justify-between gap-4">
+        <h1 className="text-4xl font-semibold">Tasks</h1>
+      </header>
+      <ErrorBoundary>
+        <Suspense fallback={<div>Loading...</div>}>
+          <TaskListSection />
+        </Suspense>
+      </ErrorBoundary>
+    </main>
   );
 }
