@@ -1,12 +1,14 @@
 import { createTask, deleteTask, getTask, listTasks, updateTask } from "@/server/task-repository";
 import { baseProcedure, createTRPCRouter } from "../init";
-import { createTaskInput, taskSchema, updateTaskInput } from "@/lib/task";
+import { createTaskInput, listTasksInput, taskSchema, updateTaskInput } from "@/lib/task";
 import { TRPCError } from "@trpc/server";
 
 const taskIdInput = taskSchema.pick({ id: true })
 
 export const taskRouter = createTRPCRouter({
-  list: baseProcedure.query(() => listTasks()),
+  list: baseProcedure
+    .input(listTasksInput)
+    .query(({ input }) => listTasks(input)),
 
   getById: baseProcedure
     .input(taskIdInput)
