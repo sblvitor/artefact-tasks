@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist_Mono, DM_Sans, Bricolage_Grotesque } from "next/font/google";
 import { TRPCReactProvider } from "@/trpc/client";
 import "./globals.css";
+import { cn } from "@/lib/utils";
+import { ThemeProvider } from "@/components/theme-provider";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+const dmSans = DM_Sans({ subsets: ['latin'], variable: '--font-sans' });
+const bricolageGrotesk = Bricolage_Grotesque({ subsets: ['latin'], variable: '--font-bricolage' })
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -22,11 +22,26 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
+      className={cn(
+        "h-full",
+        "antialiased",
+        geistMono.variable,
+        "font-sans",
+        dmSans.variable,
+        bricolageGrotesk.variable
+      )}
     >
       <body className="min-h-full flex flex-col">
         <TRPCReactProvider>
-          {children}
+          <ThemeProvider
+            attribute={'class'}
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
         </TRPCReactProvider>
       </body>
     </html>
