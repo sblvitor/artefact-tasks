@@ -21,18 +21,22 @@ export const taskRouter = createTRPCRouter({
     }),
 
 
-  createTask: baseProcedure
+  create: baseProcedure
     .input(createTaskInput)
     .mutation(({ input }) => createTask(input)),
 
-  updateTask: baseProcedure
+  update: baseProcedure
     .input(updateTaskInput.extend(taskIdInput.shape))
     .mutation(({ input }) => {
       const { id, ...data } = input
-      updateTask(id, data)
+      const updatedTask = updateTask(id, data)
+
+      if (!updatedTask) throw new TRPCError({ code: 'NOT_FOUND', message: "Task not found" })
+
+      return updatedTask
     }),
 
-  deleteTaks: baseProcedure
+  delete: baseProcedure
     .input(taskIdInput)
     .mutation(({ input }) => {
       if (!deleteTask(input.id)) throw new TRPCError({ code: 'NOT_FOUND', message: 'Task not found' })
