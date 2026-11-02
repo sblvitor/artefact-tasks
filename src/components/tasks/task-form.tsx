@@ -1,9 +1,6 @@
 import { useState } from "react";
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
-import { useTRPC } from "@/trpc/client";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "../ui/toast";
 import { Textarea } from "../ui/textarea";
 import { createTaskInput, CreateTaskInput, Task } from "@/lib/task";
 import z from "zod";
@@ -15,50 +12,14 @@ type FieldErrors = Partial<Record<keyof CreateTaskInput, string[]>>
 
 type TaskFormProps = {
   task?: Task
-  onSuccess: () => void
+  isPending: boolean
+  onSubmit: (data: CreateTaskInput) => void
 }
 
-export function TaskForm({ task, onSuccess }: TaskFormProps) {
+export function TaskForm({ task, isPending, onSubmit }: TaskFormProps) {
   const isEditing = task !== undefined
 
   const [errors, setErrors] = useState<FieldErrors>({})
-
-  const trpc = useTRPC()
-  const queryClient = useQueryClient()
-
-  function handleError(error: { message: string }) {
-    toast.add({
-      type: 'error',
-      title: 'Something went wrong.',
-      description: error.message
-    })
-  }
-
-  const create = useMutation(trpc.task.create.mutationOptions({
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: trpc.task.list.queryKey() })
-      toast.add({
-        type: 'success',
-        description: 'Task created successfully!'
-      })
-      onSuccess()
-    },
-    onError: handleError
-  }))
-
-  const update = useMutation(trpc.task.update.mutationOptions({
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: trpc.task.list.queryKey() })
-      toast.add({
-        type: 'success',
-        description: 'Task updated successfully!'
-      })
-      onSuccess()
-    },
-    onError: handleError
-  }))
-
-  const isPending = create.isPending || update.isPending
 
   function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -72,12 +33,7 @@ export function TaskForm({ task, onSuccess }: TaskFormProps) {
     }
 
     setErrors({})
-
-    if (isEditing) {
-      update.mutate({ id: task.id, ...result.data })
-    } else {
-      create.mutate(result.data)
-    }
+    onSubmit(result.data)
   }
 
   return (
