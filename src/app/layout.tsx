@@ -4,6 +4,7 @@ import { TRPCReactProvider } from "@/trpc/client";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/toast";
 
 const dmSans = DM_Sans({ subsets: ['latin'], variable: '--font-sans' });
 const bricolageGrotesk = Bricolage_Grotesque({ subsets: ['latin'], variable: '--font-bricolage' })
@@ -41,6 +42,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             disableTransitionOnChange
           >
             {children}
+            <Toaster />
           </ThemeProvider>
         </TRPCReactProvider>
       </body>
