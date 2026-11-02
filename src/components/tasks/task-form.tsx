@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
-import { createTaskInput, CreateTaskInput, Task } from "@/lib/task";
+import { createTaskInput, CreateTaskInput, Task, TASK_DESCRIPTION_MAX_LENGTH, TASK_TITLE_MAX_LENGTH } from "@/lib/task";
 import z from "zod";
 import { DialogClose, DialogFooter } from "../ui/dialog";
 import { Button } from "../ui/button";
@@ -41,12 +41,12 @@ export function TaskForm({ task, isPending, onSubmit }: TaskFormProps) {
       <FieldGroup>
         <Field data-invalid={!!errors.title}>
           <FieldLabel htmlFor="title">Title</FieldLabel>
-          <Input id="title" name="title" defaultValue={task?.title} aria-invalid={!!errors.title} />
+          <Input id="title" name="title" defaultValue={task?.title} maxLength={TASK_TITLE_MAX_LENGTH} aria-invalid={!!errors.title} />
           <FieldError errors={errors.title?.map((message) => ({ message }))} />
         </Field>
         <Field data-invalid={!!errors.description}>
           <FieldLabel htmlFor="description">Description</FieldLabel>
-          <Textarea id="description" name="description" defaultValue={task?.description} aria-invalid={!!errors.description} />
+          <Textarea id="description" name="description" defaultValue={task?.description} maxLength={TASK_DESCRIPTION_MAX_LENGTH} aria-invalid={!!errors.description} />
           <FieldError errors={errors.description?.map((message) => ({ message }))} />
         </Field>
       </FieldGroup>
